@@ -15,6 +15,6 @@ function onRequest(request, response) {
     response.end('Response #' + ++count);
 }
 
-http.createServer(onRequest).listen(PORT, 'localhost');
+http.createServer(onRequest).listen(PORT);
 
 console.info('Server running at localhost:%d', PORT);
