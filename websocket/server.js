@@ -93,8 +93,6 @@ io.on('connect', function (clientSocket) {
             var
                 player = players[this.gameId];
 
-            console.info('Move');
-
             player.x += delta.dx;
             player.y += delta.dy;
 

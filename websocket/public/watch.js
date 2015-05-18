@@ -16,8 +16,12 @@ app = (function () {
     }
 
     function start() {
+        var
+            playUrl = window.location.href.replace('watch.html', 'play.html');
 
         console.info('App is starting...');
+
+        $('#qr-code-link').attr('data', playUrl).show();
 
         socket = io.connect();
 

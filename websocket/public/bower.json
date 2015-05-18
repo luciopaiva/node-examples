@@ -17,6 +17,8 @@
     "socket.io-client": "~1.3.5",
     "jquery": "~2.1.4",
     "bootstrap": "~3.3.4",
-    "components-font-awesome": "~4.3.0"
+    "components-font-awesome": "~4.3.0",
+    "webcomponentsjs": "~0.7.0",
+    "webcomponent-qr-code": "~0.1.7"
   }
 }
