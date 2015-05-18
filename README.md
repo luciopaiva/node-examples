@@ -10,3 +10,4 @@ In ascending order of complexity:
 * static-express-server: shows how to use Express to serve static files;
 * logging-express-server: shows how to create custom middleware. Besides Express, also uses Chalk to color output;
 * json-express-server: a table tennis simulator to show the use of JSON in responses;
+* websocket: an example of a full-powered websocket application using Express;

@@ -1,8 +1,6 @@
 
 var
     express = require('express'),
-    app = express(),
-    server,
     io = require('socket.io');
 
 var
@@ -13,10 +11,6 @@ var
     watchers = {},
     players = {},
     nextId = 1;
-
-app.use(express.static('public'));
-
-io = io.listen(app.listen(8888));
 
 function updateWatchers(watcher, player) {
     if (watcher) {
@@ -39,63 +33,82 @@ function updateWatchers(watcher, player) {
     }
 }
 
-io.on('connect', function (clientSocket) {
+function clientDisconnect() {
+    var
+        playerName;
 
-    clientSocket.gameId = nextId++;
-    console.info('Client #' + clientSocket.gameId + ' has connected.');
+    if (this.gameRole) {
+        switch (this.gameRole) {
+            case ROLE_WATCHER:
+                delete watchers[this.gameClientId];
+                console.info('A watcher has disconnected.');
+                break;
+            case ROLE_PLAYER:
+                playerName = players[this.gameClientId].name;
+                delete players[this.gameClientId];
+                console.info('Player "' + playerName + '" has disconnected.');
+                updateWatchers();
+                break;
+            default:
+                console.error('Unknown client disconnecting!');
+        }
+    }
+}
 
-    clientSocket
-        .on('disconnect', function () {
-            var
-                playerName;
+function watcherOnline() {
+    var
+        watcher = {
+            socket: this
+        };
+    this.gameRole = ROLE_WATCHER;
+    watchers[this.gameClientId] = watcher;
+    console.info('A watcher is online');
+    updateWatchers(this);
+}
 
-            if (this.gameRole) {
-                switch (this.gameRole) {
-                    case ROLE_WATCHER:
-                        delete watchers[this.gameId];
-                        console.info('A watcher has disconnected.');
-                        break;
-                    case ROLE_PLAYER:
-                        playerName = players[this.gameId].name;
-                        delete players[this.gameId];
-                        console.info('Player "' + playerName + '" has disconnected.');
-                        updateWatchers();
-                        break;
-                    default:
-                        console.error('Unknown client disconnecting!');
-                }
-            }
-        })
-        .on('watch', function () {
-            var
-                watcher = {
-                    socket: this
-                };
-            this.gameRole = ROLE_WATCHER;
-            watchers[this.gameId] = watcher;
-            console.info('A watcher is online');
-            updateWatchers(this);
-        })
-        .on('play', function (player) {
-            var
-                newPlayer = {
-                    id: this.gameId,
-                    name: player.name,
-                    x: 100,
-                    y: 100
-                };
-            this.gameRole = ROLE_PLAYER;
-            players[this.gameId] = newPlayer;
-            console.info('Player "' + player.name + '" is online.');
-            updateWatchers(null);
-        })
-        .on('move', function (delta) {
-            var
-                player = players[this.gameId];
+function playerOnline(player) {
+    var
+        newPlayer = {
+            id: this.gameClientId,
+            name: player.name,
+            x: 100,
+            y: 100
+        };
+    this.gameRole = ROLE_PLAYER;
+    players[this.gameClientId] = newPlayer;
+    console.info('Player "' + player.name + '" is online.');
+    updateWatchers(null);
+}
 
-            player.x += delta.dx;
-            player.y += delta.dy;
+function playerMove(delta) {
+    var
+        player = players[this.gameClientId];
 
-            updateWatchers(null, player);
-        });
-});
+    player.x += delta.dx;
+    player.y += delta.dy;
+
+    updateWatchers(null, player);
+}
+
+function main() {
+    var
+        app = express();
+
+    app.use(express.static('public'));
+
+    io = io.listen(app.listen(8888));
+
+    io.on('connect', function (clientSocket) {
+
+        clientSocket.gameClientId = nextId++;
+        console.info('Client #' + clientSocket.gameClientId + ' has connected.');
+
+        clientSocket
+            .on('disconnect', clientDisconnect.bind(clientSocket))
+            .on('watch', watcherOnline.bind(clientSocket))
+            .on('play', playerOnline.bind(clientSocket))
+            .on('move', playerMove.bind(clientSocket));
+    });
+}
+
+main();

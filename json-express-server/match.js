@@ -27,7 +27,7 @@ function simulate(player1, player2) {
     players[0].score = 0;
     players[1].score = 0;
 
-    serving = r() < .5 ? 0: 1;
+    serving = r() < .5 ? 0 : 1;
 
     log.push(format('%s starts serving.', players[serving].name));
 
@@ -57,7 +57,7 @@ function simulate(player1, player2) {
         }
     }
 
-    result.winner =players[winner].name;
+    result.winner = players[winner].name;
     result[player1.name] = player1.score;
     result[player2.name] = player2.score;
     result.log = log;
