@@ -1,0 +1,22 @@
+{
+  "name": "websocket-app",
+  "version": "0.0.0",
+  "homepage": "https://github.com/luciopaiva/node-examples",
+  "authors": [
+    "Lucio Paiva <luciopaiva@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "socket.io-client": "~1.3.5",
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.4",
+    "components-font-awesome": "~4.3.0"
+  }
+}

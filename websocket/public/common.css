@@ -1,0 +1,14 @@
+
+html, body, .vertical-container {
+    height: 100%;
+}
+
+.vertical-container {
+    display: table;
+    vertical-align: middle;
+}
+
+.vertical-center-row {
+    display: table-cell;
+    vertical-align: middle;
+}

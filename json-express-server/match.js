@@ -16,10 +16,13 @@ function simulate(player1, player2) {
         players = [player1, player2],
         log = [],
         whoScores,
+        threshold,
         winner,
         serveCount = 0,
         serving,
         result = {};
+
+    threshold = (player1.level) / (player1.level + player2.level);
 
     players[0].score = 0;
     players[1].score = 0;
@@ -30,9 +33,7 @@ function simulate(player1, player2) {
 
     while (true) {
 
-        serveCount++;
-
-        whoScores = r() < (player1.level) / (player1.level + player2.level) ? 0 : 1;
+        whoScores = r() < threshold ? 0 : 1;
 
         players[whoScores].score++;
         log.push(format('%s scores.', players[whoScores].name));
@@ -46,6 +47,8 @@ function simulate(player1, player2) {
         }
 
         log.push(format('The score is %s.', printScore(player1, player2)));
+
+        serveCount++;
 
         if (serveCount == 2) {
             serveCount = 0;
