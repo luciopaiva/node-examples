@@ -89,23 +89,14 @@ io.on('connect', function (clientSocket) {
             console.info('Player "' + player.name + '" is online.');
             updateWatchers(null);
         })
-        .on('up', function () {
+        .on('move', function (delta) {
             var
                 player = players[this.gameId];
 
-            console.info('UP');
+            console.info('Move');
 
-            player.y -= 10;
-
-            updateWatchers(null, player);
-        })
-        .on('down', function () {
-            var
-                player = players[this.gameId];
-
-            console.info('DOWN');
-
-            player.y += 10;
+            player.x += delta.dx;
+            player.y += delta.dy;
 
             updateWatchers(null, player);
         });

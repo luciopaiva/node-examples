@@ -12,8 +12,6 @@ app = (function () {
         var
             x = player.x, y = player.y;
 
-        console.info('Player new position: ' + x + ', ' + y);
-
         player.shape.attr('transform', 'translate(' + x + ',' + y + ')');
     }
 
@@ -33,9 +31,6 @@ app = (function () {
             var
                 shape = players[player.id].shape;
 
-            console.info('Player position updated');
-            console.dir(player);
-
             players[player.id] = player;
             players[player.id].shape = shape;
 
@@ -47,7 +42,7 @@ app = (function () {
                 playerCount = Object.keys(updatedPlayers).length,
                 text;
 
-            console.info('Received players list');
+            console.info('Players count: ' + playerCount);
 
             Object.keys(updatedPlayers).forEach(function (playerId) {
                 var
