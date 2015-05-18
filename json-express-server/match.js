@@ -7,13 +7,14 @@ function alternate(current) {
     return current == 0 ? 1 : 0;
 }
 
-function printScore(player1, player2) {
-    return format('%s %d x %d %s', player1.name, player1.score, player2.score, player2.name);
+function printScore(player1, score1, player2, score2) {
+    return format('%s %d x %d %s', player1.name, score1, score2, player2.name);
 }
 
 function simulate(player1, player2) {
     var
         players = [player1, player2],
+        scores = [0, 0],
         log = [],
         whoScores,
         threshold,
@@ -24,8 +25,8 @@ function simulate(player1, player2) {
 
     threshold = (player1.level) / (player1.level + player2.level);
 
-    players[0].score = 0;
-    players[1].score = 0;
+    scores[0] = 0;
+    scores[1] = 0;
 
     serving = r() < .5 ? 0 : 1;
 
@@ -35,18 +36,20 @@ function simulate(player1, player2) {
 
         whoScores = r() < threshold ? 0 : 1;
 
-        players[whoScores].score++;
+        scores[whoScores]++;
         log.push(format('%s scores.', players[whoScores].name));
 
-        if ((players[whoScores].score >= 21) &&
-            (players[whoScores].score - players[alternate(whoScores)].score) > 1) {
+        if ((scores[whoScores] >= 21) &&
+            (scores[whoScores] - scores[alternate(whoScores)]) > 1) {
 
             winner = whoScores;
-            log.push(format('%s is the winner. The final score is %s', players[whoScores].name, printScore(player1, player2)));
+            log.push(format('%s is the winner. The final score is %s',
+                players[whoScores].name,
+                printScore(player1, scores[0], player2, scores[1])));
             break;
         }
 
-        log.push(format('The score is %s.', printScore(player1, player2)));
+        log.push(format('The score is %s.', printScore(player1, scores[0], player2, scores[1])));
 
         serveCount++;
 
@@ -58,8 +61,8 @@ function simulate(player1, player2) {
     }
 
     result.winner = players[winner].name;
-    result[player1.name] = player1.score;
-    result[player2.name] = player2.score;
+    result[player1.name] = scores[0];
+    result[player2.name] = scores[1];
     result.log = log;
 
     return result;
