@@ -8,10 +8,6 @@ var
     messages,
     PORT = 8888;
 
-function loadMessages() {
-    messages = fs.readFileSync(MESSAGES_FILE, 'utf-8').split('\n');
-}
-
 function onRequest(request, response) {
     var
         pos;
@@ -26,8 +22,8 @@ function onRequest(request, response) {
 
 function main() {
 
-    loadMessages();
-    http.createServer(onRequest).listen(PORT, 'localhost');
+    messages = fs.readFileSync(MESSAGES_FILE, 'utf-8').split('\n');
+    http.createServer(onRequest).listen(PORT);
     console.info('Server running at localhost:%d', PORT);
 }
 
